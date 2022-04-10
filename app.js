@@ -82,7 +82,6 @@ app.put('/api/notes', async(req, res, next) => {
 
 app.post('/api/notes', async(req, res, next) => {
   try{
-    console.log(req);
     const user = await User.byToken(req.headers.authorization);
     await Note.create({txt: req.body.txt, userId: user.id})
     const notes = await Note.findAll({

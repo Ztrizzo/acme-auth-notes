@@ -13,6 +13,9 @@ const notes = (state = [], action)=> {
   if(action.type === 'NEW_NOTE'){
     return action.notes;
   }
+  if(action.type === 'DELETE_NOTE'){
+    return action.notes;
+  }
   return state;
 };
 
@@ -32,6 +35,23 @@ const editNote = (txt, noteId) => {
     })).data
     dispatch({
       type: 'EDIT_NOTE',
+      notes
+    })
+  }
+}
+
+const deleteNote = (noteId) => {
+  return async(dispatch) => {
+    const notes = (await axios.delete('/api/notes', {
+      headers:{
+        authorization: window.localStorage.token
+      },
+      data: {
+        noteId: noteId
+      }
+    })).data
+    dispatch({
+      type: 'DELETE_NOTE',
       notes
     })
   }
@@ -108,6 +128,6 @@ const store = createStore(
   applyMiddleware(thunk, logger)
 );
 
-export { attemptLogin, signIn, logout, getNotes, newNote, editNote };
+export { attemptLogin, signIn, logout, getNotes, newNote, editNote, deleteNote };
 
 export default store;

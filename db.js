@@ -79,9 +79,9 @@ const syncAndSeed = async()=> {
   );
 
   for(let i = 0; i < 10; i ++){
-    await Note.create({txt: `moe: ${faker.lorem.paragraph(1)}`, userId: moe.id})
-    await Note.create({txt: `lucy: ${faker.lorem.paragraph(1)}`, userId: lucy.id})
-    await Note.create({txt: `larry: ${faker.lorem.paragraph(1)}`, userId: larry.id})
+    await Note.create({txt: `moe: ${faker.lorem.sentence(8)}`, userId: moe.id})
+    await Note.create({txt: `lucy: ${faker.lorem.sentence(8)}`, userId: lucy.id})
+    await Note.create({txt: `larry: ${faker.lorem.sentence(8)}`, userId: larry.id})
   }
 
   return {

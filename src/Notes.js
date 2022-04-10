@@ -2,7 +2,7 @@ import React from 'react';
 import { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getNotes } from './store';
+import { getNotes, deleteNote } from './store';
 import NewNote from './NewNote';
 
 class Notes extends Component {
@@ -23,7 +23,7 @@ class Notes extends Component {
             {notes.map((note) => {
               return <li key={note.id}>
                 <Link to={`/notes/${note.id}`} >{note.txt}</Link>
-                <button>x</button>
+                <button onClick={() => this.props.deleteNote(note.id)}>x</button>
               </li>
             })}
             
@@ -41,6 +41,9 @@ const mapDispatchToProps = (dispatch) => {
   return{
     getNotes: function(){
       dispatch(getNotes());
+    },
+    deleteNote: function(noteId){
+      dispatch(deleteNote(noteId));
     }
   }
 }

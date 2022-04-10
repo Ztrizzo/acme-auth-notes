@@ -41,6 +41,24 @@ app.get('/api/notes', async(req, res, next) => {
   }
 })
 
+app.delete('/api/notes', async(req, res, next) => {
+  try{
+    const user = await User.byToken(req.headers.authorization);
+    const note = await Note.findByPk(req.body.noteId);
+    await note.destroy();
+    const notes = await Note.findAll({
+        where:{
+          userId: user.id
+        }
+      }
+    )
+    res.send(notes);
+  }
+  catch(ex){
+    next(ex);
+  }
+})
+
 app.put('/api/notes', async(req, res, next) => {
   try{
     const user = await User.byToken(req.headers.authorization);

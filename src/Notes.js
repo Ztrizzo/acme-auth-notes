@@ -11,12 +11,6 @@ class Notes extends Component {
     await this.props.getNotes();
   }
 
-  componentDidUpdate(prevProps){
-    if(this.props != prevProps){
-      this.props.getNotes();
-    }
-  }
-
 
   render(){
     const {notes} = this.props;

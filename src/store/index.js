@@ -7,7 +7,10 @@ const notes = (state = [], action)=> {
   if(action.type === 'GET_NOTES'){
     return action.notes;
   }
-  if(action.type === 'EDIT_NOTES'){
+  if(action.type === 'EDIT_NOTE'){
+    return action.notes;
+  }
+  if(action.type === 'NEW_NOTE'){
     return action.notes;
   }
   return state;
@@ -27,7 +30,6 @@ const editNote = (txt, noteId) => {
         authorization: window.localStorage.token
       }
     })).data
-
     dispatch({
       type: 'EDIT_NOTE',
       notes
@@ -43,7 +45,10 @@ const newNote = (txt) => {
       }
     })).data;
 
-    console.log(notes);
+    dispatch({
+      type: 'NEW_NOTE',
+      notes
+    })
 
   }
 }

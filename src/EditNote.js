@@ -2,10 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { editNote } from './store';
 class EditNote extends React.Component{
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
+    const noteToBeEdited = this.props.notes.find(note => note.id === this.props.match.params.id * 1);
     this.state = {
-      editNote: ''
+      editNote: noteToBeEdited.txt
     }
 
     this.onChange = this.onChange.bind(this);
@@ -18,9 +19,18 @@ class EditNote extends React.Component{
     })
   }
 
+  componentDidUpdate(_, prevState){
+    const noteToBeEdited = this.props.notes.find(note => note.id === this.props.match.params.id * 1);
+    if(prevState.editNote !== noteToBeEdited.txt){
+      this.setState({
+        editNote: noteToBeEdited.txt
+      })
+    }
+  }
+
   onSubmit(evt){
     evt.preventDefault();
-    this.props.editNote(this.state.editNote, this.props.match.params.id)
+    this.props.editNote(this.state.editNote, this.props.match.params.id * 1)
   }
 
   render(){
@@ -41,4 +51,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(EditNote);
+export default connect(state => state, mapDispatchToProps)(EditNote);

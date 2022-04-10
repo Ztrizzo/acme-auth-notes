@@ -8,6 +8,7 @@ import NewNote from './NewNote';
 class Notes extends Component {
 
   async componentDidMount(){
+    console.log('cdm');
     await this.props.getNotes();
   }
 

@@ -41,6 +41,27 @@ app.get('/api/notes', async(req, res, next) => {
   }
 })
 
+app.put('/api/notes', async(req, res, next) => {
+  try{
+    const user = await User.byToken(req.headers.authorization);
+    const note = await Note.findByPk(req.body.noteId);
+    note.txt = req.body.txt;
+    await note.validate();
+    await note.save();
+
+    const notes = await Note.findAll({
+      where:{
+        userId: user.id
+      }
+    })
+    res.send(notes);
+
+  }
+  catch(ex){
+    next(ex);
+  }
+})
+
 app.post('/api/notes', async(req, res, next) => {
   try{
     console.log(req);

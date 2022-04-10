@@ -11,6 +11,13 @@ class Notes extends Component {
     await this.props.getNotes();
   }
 
+  componentDidUpdate(prevProps){
+    if(this.props != prevProps){
+      this.props.getNotes();
+    }
+  }
+
+
   render(){
     const {notes} = this.props;
     return(
@@ -19,7 +26,7 @@ class Notes extends Component {
         <div>
           <ul>
             {notes.map((note) => {
-              return <li key={note.id}>{note.txt}</li>
+              return <Link to={`/notes/${note.id}`} key={note.id}><li>{note.txt}</li></Link>
             })}
           </ul>
         </div>

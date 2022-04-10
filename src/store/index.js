@@ -7,6 +7,9 @@ const notes = (state = [], action)=> {
   if(action.type === 'GET_NOTES'){
     return action.notes;
   }
+  if(action.type === 'EDIT_NOTES'){
+    return action.notes;
+  }
   return state;
 };
 
@@ -16,6 +19,21 @@ const auth = (state = {}, action)=> {
   }
   return state;
 };
+
+const editNote = (txt, noteId) => {
+  return async(dispatch) => {
+    const notes = (await axios.put('/api/notes', {txt, noteId}, {
+      headers:{
+        authorization: window.localStorage.token
+      }
+    })).data
+
+    dispatch({
+      type: 'EDIT_NOTE',
+      notes
+    })
+  }
+}
 
 const newNote = (txt) => {
   return async(dispatch) => {
@@ -85,6 +103,6 @@ const store = createStore(
   applyMiddleware(thunk, logger)
 );
 
-export { attemptLogin, signIn, logout, getNotes, newNote };
+export { attemptLogin, signIn, logout, getNotes, newNote, editNote };
 
 export default store;

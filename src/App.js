@@ -2,10 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { attemptLogin, logout } from './store';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect, HashRouter as Routes } from 'react-router-dom';
 import Home from './Home';
 import Notes from './Notes';
 import SignIn from './SignIn';
+import EditNote from './EditNote';
 
 
 class App extends React.Component{
@@ -26,11 +27,19 @@ class App extends React.Component{
     }
     else {
       return (
-        <Switch>
-          <Route path='/home' component={ Home } />
-          <Route path='/notes' component={ Notes } />
-          <Redirect to='/home' />
-        </Switch>
+        <Routes>
+
+
+          {/* <Switch> */}
+            
+
+            <Route path='/home' component={ Home } />
+            <Route path='/notes' component={ Notes } />
+            <Route path='/notes/:id' component={ EditNote }/> 
+            <Redirect to='/home' />
+          {/* </Switch> */}
+        </Routes>
+        
       );
     }
   }

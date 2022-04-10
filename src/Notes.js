@@ -21,8 +21,12 @@ class Notes extends Component {
         <div>
           <ul>
             {notes.map((note) => {
-              return <Link to={`/notes/${note.id}`} key={note.id}><li>{note.txt}</li></Link>
+              return <li key={note.id}>
+                <Link to={`/notes/${note.id}`} >{note.txt}</Link>
+                <button>x</button>
+              </li>
             })}
+            
           </ul>
         </div>
         <NewNote/>

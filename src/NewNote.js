@@ -22,6 +22,9 @@ class NewNote extends Component{
   onSubmit(evt){
     evt.preventDefault();
     this.props.newNote(this.state.newNote);
+    this.setState({
+      newNote: ''
+    })
   }
 
   render(){

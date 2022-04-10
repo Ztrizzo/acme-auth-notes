@@ -19,18 +19,20 @@ class EditNote extends React.Component{
     })
   }
 
-  componentDidUpdate(_, prevState){
-    const noteToBeEdited = this.props.notes.find(note => note.id === this.props.match.params.id * 1);
-    if(prevState.editNote !== noteToBeEdited.txt){
+  componentDidUpdate(prevProps){
+    if(prevProps.match.params.id !== this.props.match.params.id){
+      const noteToBeEdited = this.props.notes.find(note => note.id === this.props.match.params.id * 1);
       this.setState({
         editNote: noteToBeEdited.txt
       })
     }
+
   }
 
   onSubmit(evt){
     evt.preventDefault();
     this.props.editNote(this.state.editNote, this.props.match.params.id * 1)
+    this.props.history.push('/notes');
   }
 
   render(){

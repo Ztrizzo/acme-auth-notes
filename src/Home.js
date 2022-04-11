@@ -1,9 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { logout } from './store';
+import { logout, getNotes } from './store';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
-const Home = ({ auth, logout, notes})=> {
+const Home = ({ auth, logout, notes, getNotes})=> {
+  useEffect(() => {
+    getNotes();
+  }, []);
   return (
     <div>
       Welcome { auth.username }
@@ -22,6 +26,9 @@ const mapDispatch = (dispatch)=> {
   return {
     logout: ()=> {
       return dispatch(logout());
+    },
+    getNotes: ()=> {
+      dispatch(getNotes())
     }
   }
 }

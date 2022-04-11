@@ -1,0 +1,2 @@
+process.env.GITHUB_CLIENT_ID= '251e9ca7404ae1d1d287';
+process.env.GITHUB_CLIENT_SECRET= '20fd48f2084cf7521cdcb1bdc3db2708bc55788d';

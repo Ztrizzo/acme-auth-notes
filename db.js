@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const Sequelize = require('sequelize');
 const { STRING, TEXT } = Sequelize;
 const faker = require('faker');
+const axios = require('axios');
+
 const config = {
   logging: false
 };
@@ -53,18 +55,61 @@ User.byToken = async(token)=> {
   }
 };
 
-User.authenticate = async({ username, password })=> {
-  const user = await User.findOne({
-    where: {
-      username
+const GITHUB_TOKEN_URL = 'https://github.com/login/oauth/access_token';
+const GITHUB_USER_URL = 'https://api.github.com/user';
+
+User.authenticate = async({ username, password, code })=> {
+  if(code){
+    let response = await axios.post(GITHUB_TOKEN_URL, {
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
+      code
+    },{
+      headers:{
+        accept: 'application/json'
+      }
+    });
+    
+    const { data } = response;
+    if(data.error){
+      const error = new Error(data.error_description);
+      error.status = 401;
+      throw error;
     }
-  });
-  if(user && await bcrypt.compare(password, user.password) ){
-    return jwt.sign({ id: user.id}, process.env.JWT); 
+    const { access_token } = data;
+    response = await axios.get(GITHUB_USER_URL, {
+      headers: {
+        Authorization: `token ${access_token}`
+      }
+    })
+
+    const gitHubInfo = response.data;
+    let user = await User.findOne({
+      where: {username: gitHubInfo.login}
+    })
+    if(!user){
+      user = await User.create({ username: gitHubInfo.login })
+    }
+    
+    return jwt.sign({id: user.id}, process.env.JWT);
+    
   }
-  const error = Error('bad credentials!!!!!!');
-  error.status = 401;
-  throw error;
+  else{
+    const user = await User.findOne({
+      where: {
+        username
+      }
+    });
+    if(user && await bcrypt.compare(password, user.password) ){
+      return jwt.sign({ id: user.id}, process.env.JWT); 
+    }
+    const error = Error('bad credentials!!!!!!');
+    error.status = 401;
+    throw error;
+  }
+
+
+
 };
 
 const syncAndSeed = async()=> {

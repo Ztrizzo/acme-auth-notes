@@ -4,9 +4,13 @@ app.use(express.json());
 const { models: { User, Note}} = require('./db');
 const path = require('path');
 
+app.engine('html', require('ejs').renderFile);
+
+
+
 app.use('/dist', express.static(path.join(__dirname, 'dist')));
 
-app.get('/', (req, res)=> res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/', (req, res)=> res.render(path.join(__dirname, 'index.html'), {GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID}));
 
 app.post('/api/auth', async(req, res, next)=> {
   try {
@@ -105,6 +109,31 @@ app.get('/api/purchases', async(req, res, next)=> {
     next(ex);
   }
 });
+
+app.get('/github/callback', async(req, res, next)=> {
+  try{
+    const token = await User.authenticate(req.query);
+    // res.send('this is a test');
+    res.send(
+      `
+      <html>
+        <body>
+          ${token}
+          <script>
+            window.localStorage.setItem('token', '${token}');
+            window.document.location = '/';
+          </script>
+        </body>
+      </html>
+      `
+    )
+    // window.localStorage.setItem('token', '${token});
+    // ${/*window.document.location = '/';*/''}
+  }
+  catch(ex){
+    next(ex);
+  }
+})
 
 app.use((err, req, res, next)=> {
   console.log(err);

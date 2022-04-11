@@ -39,12 +39,14 @@ class SignIn extends React.Component{
   render(){
     const { onChange, onSubmit } = this;
     const { username, password, error } = this.state;
+    console.log(window.GITHUB_CLIENT_ID);
     return (
       <form onSubmit={ onSubmit }>
         { error }
         <input value={ username } onChange={ onChange } name='username'/>
         <input value={ password } onChange={ onChange } name='password'/>
         <button>Sign In</button>
+        <a href={`https://github.com/login/oauth/authorize?client_id=${window.GITHUB_CLIENT_ID}`}><button type='button'>Github Oauth</button></a>
       </form>
     );
   }
